@@ -6,6 +6,7 @@
 
 :root {
   --cor-primaria: #2e7d32;
+  --cor-primaria-escura: #1e5321;
   --cor-texto: #1a1a1a;
   --cor-fundo: #fafafa;
   --cor-branco: #ffffff;
@@ -25,16 +26,22 @@ h1 {
   text-align: center;
 }
 
+p {
+  text-align: center;
+  font-size: 0.95rem;
+}
+
 header {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--espaco-medio);
+  height: 140px;
   background-color: var(--cor-primaria);
 }
 
 header img {
-  height: 100px;
+  height: 250px;
   width: auto;
   object-fit: contain;
 }
@@ -67,17 +74,225 @@ header img {
 }
 
 #form-perfil button {
-  padding: 10px;
+
+  width: 70%;
+  align-self: center;
+
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  font-size: 0.9rem;
   background-color: var(--cor-primaria);
   color: white;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#form-perfil button:hover {
+  background-color: var(--cor-primaria-escura);
+}
+
+#form-perfil button:active {
+  background-color: var(--cor-primaria-escura);
+  transform: scale(0.97);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 #form-perfil button:focus-visible {
   outline: 3px solid var(--cor-primaria);
   outline-offset: 2px;
 }
+
+.footer{
+    margin-top: 4rem;
+    background: var(--cor-primaria);
+    color: white;
+    padding: 2rem 1rem;
+}
+
+.footer-container{
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer p{
+    margin-bottom: .7rem;
+    font-size: .85rem;
+}
+
+.footer small{
+    display: block;
+    margin-top: 1rem;
+    opacity: .8;
+}
+
+.footer-links{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-links a{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: .3s;
+}
+
+.footer-links a:hover{
+    color: #c8e6c9;
+}
+
+
+#resultado {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+#titulo-resultado {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.card-vaga {
+  background-color: var(--cor-branco);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card-vaga h3 {
+  color: var(--cor-primaria);
+  margin-bottom: 1rem;
+}
+
+.card-vaga p {
+  text-align: left;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-vaga strong {
+  font-weight: bold;
+}
+
+.compatibilidade {
+    margin: 1rem 0;
+}
+
+.compatibilidade-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.barra-compatibilidade {
+    width: 100%;
+    height: 12px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progresso {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.mensagem-erro {
+    max-width: 500px;
+    margin: 1rem auto;
+    padding: 1rem;
+    border: 1px solid #c62828;
+    border-radius: 6px;
+    background-color: #ffebee;
+    color: #c62828;
+    text-align: center;
+    font-weight: bold;
+}
+
+.carregando {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--cor-branco);
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.carregando p {
+    margin-bottom: 0.5rem;
+}
+
+/* Cores de compatibilidade — usadas na barra de progresso e no texto de classificação */
+.compatibilidade-alta {
+  color: #2e7d32;
+}
+.compatibilidade-media {
+  color: #f9a825;
+}
+.compatibilidade-baixa {
+  color: #c62828;
+}
+
+.progresso.compatibilidade-alta {
+  background-color: #2e7d32;
+}
+.progresso.compatibilidade-media {
+  background-color: #f9a825;
+}
+.progresso.compatibilidade-baixa {
+  background-color: #c62828;
+}
+
+/* Tags de habilidades */
+.lista-habilidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.tag.habilidade-encontrada {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.tag.habilidade-faltante {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.vazio {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--cor-branco);
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.vazio p {
+    margin-bottom: 0.5rem;
+}
+
+
+/*resposividade para telas com no máximo até 768px*/
 
 @media (max-width: 768px) {
 
@@ -86,13 +301,39 @@ header img {
     text-align: center;
   }
 
+  header img {
+    height: 200px; 
+    width: auto;
+    object-fit: contain;
+  }
+
   header {
     height: 70px;
-    width: auto;
+  }
+
+  h1 {
+    font-size: 1.35reM;
+    text-align: center;
+  }
+
+  p {
+    text-align: center;
+    font-size: 0.75rem;
   }
 
   #form-perfil {
     display: flex;
     flex-direction: column;
+  }
+
+  #form-perfil button {
+    width: 180px;      
+    align-self: center; 
+  }
+
+  
+.footer p{  
+    margin-bottom: .7rem;
+    font-size: .65rem;
   }
 }

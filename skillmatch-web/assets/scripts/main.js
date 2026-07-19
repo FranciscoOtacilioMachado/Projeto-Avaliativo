@@ -1,171 +1,37 @@
-//Candidato
-const candidato = {
-    nome: "Francisco", 
-    area: "Front-End",
-    habilidades: [
-        "HTML",
-        "CSS",
-        "JavaScript",
-        "Lógica de Programação",
-        "Kanban"
-    ],
-    experiencia: 3,
-};
+import {
+    VagasFrontEnd,
+    criarContadorDeAnalise
+} from "./motor.js";
 
-// Criação da classe vaga
-class Vaga {
-    id = 0;
-    empresa = "";
-    cargo = "";
-    requisitos = "";
-    salario = 0;
-    modalidade = "";
-    constructor(id, empresa, cargo, requisitos, salario, modalidade) {
-        this.id = id;
-        this.empresa = empresa;
-        this.cargo = cargo;
-        this.requisitos = requisitos;
-        this. salario = salario;
-        this.modalidade = modalidade;
-    }
+import { buscarVagas } from "./dados.js";
 
-    exibirResumo() {
-        return `${this.cargo} na empresa ${this.empresa} (${this.modalidade}) – R$ ${this.salario}/mês`;
-    }
-
-    //Analisa vagas
-
-    calcularCompatibilidade(candidato) {
-        const habilidadesEncontradas = 
-            this.requisitos.filter(requisito =>
-                candidato.habilidades.includes(requisito)
-            );
-
-        const habilidadesFaltantes = 
-            this.requisitos.filter(requisito =>
-                !candidato.habilidades.includes(requisito)
-            );
-        const percentual = 
-            Math.round( 
-                (habilidadesEncontradas.length/
-                    this.requisitos.length
-                ) * 100
-        );
-        //Classificação
-
-        const classificacao = classificarCompatibilidade(percentual);
-
-        return {
-            empresa: this.empresa,
-            cargo: this.cargo,
-            percentual,
-            classificacao,
-            habilidadesEncontradas,
-            habilidadesFaltantes
-            };
-
-    }
-    
-}
-
-class VagasFrontEnd  extends Vaga { 
-    constructor (id, empresa, cargo, requisitos, salario, modalidade, nivel) {
-        super(id, empresa, cargo, requisitos, salario, modalidade)
-        this.nivel = nivel;
-    }
-
-    exibirNivel() {
-        return `Nível de vaga ${this.nivel}`;
-    }
-}
-
-// cadastro de arrays de vagas
-const dadosVagas = [
-  {
-    id: 1,
-    empresa: "TechStart",
-    cargo: "Desenvolvedor Front-End Júnior",
-    requisitos: ["JavaScript", "CSS", "GitHub", "Lógica de Programação", "Kanban"],
-    salario: 2800,
-    modalidade: "Remoto",
-    nivel: "Junior",
-  },
-  {
-    id: 2,
-    empresa: "CodeLab",
-    cargo: "Estágio Front-End",
-    requisitos: ["JavaScript", "Kanban", "GitHub"],
-    salario: 1800,
-    modalidade: "Híbrido",
-    nivel: "Estagiário",
-  },
-  {
-    id: 3,
-    empresa: "WebSolutions",
-    cargo: "Programador JavaScript Júnior",
-    requisitos: ["JavaScript", "Arrays", "Objetos", "Funções"],
-    salario: 3000,
-    modalidade: "Presencial",
-    nivel: "Júnior",
-  },
-  {
-    id: 4,
-    empresa: "SolutionsMund",
-    cargo: "Desenvolvedor Front-End",
-    requisitos: ["JavaScript", "React", "GitHub"],
-    salario: 2800,
-    modalidade: "Hibrido",
-    nivel: "Senior",
-  },
-]
-
-const vagas = dadosVagas.map(dado =>
-    new VagasFrontEnd(
-        dado.id,
-        dado.empresa,
-        dado.cargo,
-        dado.requisitos,
-        dado.salario,
-        dado.modalidade,
-        dado.nivel
-    )
-);
-
-function criarContadorDeAnalise() {
-    let total = 0;
-
-    return function() {
-        total++;
-
-        return total;
-    };
-}
-
-const contadorAnalises = criarContadorDeAnalise();
+import {
+    exibirResultados,
+    exibirMensagemErro,
+    limparMensagemErro,
+    exibirCarregamento,
+    limparResultado,
+    exibirMensagemVazia
+} from "./ui.js";
 
 
-// Classificação de compatibilidade
-function classificarCompatibilidade(percentual) {
-    if(percentual >=80) {
-        return "Alta compatibilidade";
-    }
+const contadorAnalises =
+    criarContadorDeAnalise();
 
-    else if(percentual >=50) {
-        return "Média compatibilidade";
-    }
 
-    else {
-        return "Baixa Compatibilidade";
-    }
-}
+// ==========================================
+// FUNÇÃO PARA FINALIZAR ANÁLISE
+// ==========================================
 
-//
-
-function finalizarAnalise(nomeCandidato, callback) {
-    console.log("\nAnalise finalizada")
+function finalizarAnalise(
+    nomeCandidato,
+    callback
+) {
+    console.log("\nAnálise finalizada");
 
     callback(nomeCandidato);
 }
+
 
 function exibirMensagemFinal(nome) {
     console.log(
@@ -174,138 +40,305 @@ function exibirMensagemFinal(nome) {
 }
 
 
-function buscarVagas() {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(vagas);
-        }, 2000);
-    });
-}
+function validarCandidato(candidato) {
+    const erros = [];
 
-//função que aprensanta as informações na tela
-async function iniciarSistema() {
-    console.log("SKILLMATCH JS")
-
-    console.log(`Candidato: ${candidato.nome}`);
-    console.log(`Área: ${candidato.area}`);
-    console.log(
-        `Habilidades: ${candidato.habilidades.join(", ")}`
+    if (!candidato.nome) {
+        erros.push(
+            "Informe seu nome."
         );
-
-    console.log("\nAnalisando vagas...\n");
-
-    const vagasCarregadas =
-    await buscarVagas();
-
-    const resultados =
-    vagasCarregadas.map(vaga =>
-        vaga.calcularCompatibilidade(candidato)
-    );
-
-      resultados.forEach(resultado => {
-
-        console.log("==================================");
-
-        console.log(`Empresa: ${resultado.empresa}`);
-
-        console.log(`Cargo: ${resultado.cargo}`);
-
-        console.log(
-            `Compatibilidade: ${resultado.percentual}%`
-        );
-
-        console.log(
-            `Classificação: ${resultado.classificacao}`
-        );
-
-        console.log(
-            `Habilidades encontradas: ${resultado.habilidadesEncontradas.join(", ")}`
-        );
-
-        console.log(
-            `Habilidades faltantes: ${resultado.habilidadesFaltantes.join(", ")}`
-        );
-
-        console.log("==================================");
-
-        // closure
-            console.log(
-            `Análises realizadas: ${contadorAnalises()}`
-        );
-    });
-
-    // REDUCE
-    const melhorVaga =
-        resultados.reduce((melhor, atual) => {
-
-            if (atual.percentual > melhor.percentual) {
-                return atual;
-            }
-
-            return melhor;
-        });
-
-    console.log("\n");
-    console.log("VAGA MAIS COMPATÍVEL");
-
-    console.log(
-        `${melhorVaga.cargo} - ${melhorVaga.percentual}%`
-    );
-
-    // FIND
-    const vagaAltaCompatibilidade =
-        resultados.find(resultado =>
-            resultado.percentual >= 80
-        );
-
-    if (vagaAltaCompatibilidade) {
-
-        console.log("\nPrimeira vaga com alta compatibilidade:");
-
-        console.log(vagaAltaCompatibilidade.cargo);
     }
 
-    // EVERY
-    const todasExigemJavaScript =
-        vagas.every(vaga =>
-            vaga.requisitos.includes("JavaScript")
+    if (!candidato.area) {
+        erros.push(
+            "Informe sua área de interesse."
         );
+    }
 
-    console.log("\nTodas as vagas exigem JavaScript?");
-    console.log(
-        todasExigemJavaScript ? "Sim" : "Não"
-    );
+    if (
+        candidato.habilidades.length === 0 ||
+        candidato.habilidades[0] === ""
+    ) {
+        erros.push(
+            "Informe pelo menos uma habilidade."
+        );
+    }
 
-    // RECOMENDAÇÃO DE ESTUDOS
-    console.log("RECOMENDAÇÃO DE ESTUDOS");
-
-    // REDUCE
-    const habilidadesParaEstudar =
-        resultados.reduce((lista, resultado) => {
-
-            resultado.habilidadesFaltantes.forEach(habilidade => {
-
-                if (!lista.includes(habilidade)) {
-                    lista.push(habilidade);
-                }
-            });
-
-            return lista;
-
-        }, []);
-
-    console.log(
-        `Priorize estudar: ${habilidadesParaEstudar.join(", ")}`
-    );
-
-    // CALLBACK
-    finalizarAnalise(
-        candidato.nome,
-        exibirMensagemFinal
-    );
+    return erros;
 }
 
 // ==========================================
-// EXECUTAR SISTEMA
+// LER FORMULÁRIO
 // ==========================================
-iniciarSistema();
+
+function obterDadosDoFormulario() {
+
+    const nome =
+        document.querySelector("#nome").value;
+
+    const area =
+        document.querySelector("#area").value;
+
+    const habilidades =
+        document.querySelector("#habilidades").value;
+
+    const experiencia =
+        document.querySelector("#experiencia").value;
+
+
+    return {
+
+        nome,
+
+        area,
+
+        habilidades:
+            habilidades
+                .split(",")
+                .map(habilidade =>
+                    habilidade.trim()
+                ),
+
+        experiencia:
+            Number(experiencia)
+    };
+}
+
+
+// ==========================================
+// SISTEMA PRINCIPAL
+// ==========================================
+
+async function iniciarSistema(candidato) {
+
+    try {
+
+        console.log("SKILLMATCH JS");
+
+        console.log(
+            `Candidato: ${candidato.nome}`
+        );
+
+        console.log(
+            `Área: ${candidato.area}`
+        );
+
+
+        console.log(
+            `Habilidades: ${candidato.habilidades.join(", ")}`
+        );
+
+
+        console.log(
+            "\nAnalisando vagas...\n"
+        );
+
+
+        const vagasCarregadas =
+            await buscarVagas();
+
+
+        const vagas =
+            vagasCarregadas.map(dado =>
+                new VagasFrontEnd(
+                    dado.id,
+                    dado.empresa,
+                    dado.cargo,
+                    dado.requisitos,
+                    dado.salario,
+                    dado.modalidade,
+                    dado.nivel
+                )
+            );
+
+
+        const resultados =
+            vagas.map(vaga =>
+                vaga.calcularCompatibilidade(
+                    candidato
+                )
+            );
+
+
+        exibirResultados(resultados);
+
+
+        // ==================================
+        // REDUCE
+        // ==================================
+
+        const melhorVaga =
+            resultados.reduce(
+                (melhor, atual) => {
+
+                    if (
+                        atual.percentual >
+                        melhor.percentual
+                    ) {
+                        return atual;
+                    }
+
+                    return melhor;
+                }
+            );
+
+
+        console.log(
+            "\nVAGA MAIS COMPATÍVEL"
+        );
+
+
+        console.log(
+            `${melhorVaga.cargo} - ${melhorVaga.percentual}%`
+        );
+
+
+        // ==================================
+        // FIND
+        // ==================================
+
+        const vagaAltaCompatibilidade =
+            resultados.find(
+                resultado =>
+                    resultado.percentual >= 80
+            );
+
+
+        if (vagaAltaCompatibilidade) {
+
+            console.log(
+                "\nPrimeira vaga com alta compatibilidade:"
+            );
+
+            console.log(
+                vagaAltaCompatibilidade.cargo
+            );
+        }
+
+
+        // ==================================
+        // EVERY
+        // ==================================
+
+        const todasExigemJavaScript =
+            vagas.every(
+                vaga =>
+                    vaga.requisitos.includes(
+                        "JavaScript"
+                    )
+            );
+
+
+        console.log(
+            "\nTodas as vagas exigem JavaScript?"
+        );
+
+
+        console.log(
+            todasExigemJavaScript
+                ? "Sim"
+                : "Não"
+        );
+
+
+        // ==================================
+        // RECOMENDAÇÃO DE ESTUDOS
+        // ==================================
+
+        const habilidadesParaEstudar =
+            resultados.reduce(
+                (lista, resultado) => {
+
+                    resultado.habilidadesFaltantes
+                        .forEach(habilidade => {
+
+                            if (
+                                !lista.includes(
+                                    habilidade
+                                )
+                            ) {
+
+                                lista.push(
+                                    habilidade
+                                );
+                            }
+                        });
+
+                    return lista;
+
+                },
+                []
+            );
+
+
+        console.log(
+            `Priorize estudar: ${
+                habilidadesParaEstudar.join(", ")
+            }`
+        );
+
+
+        // ==================================
+        // CALLBACK
+        // ==================================
+
+        finalizarAnalise(
+            candidato.nome,
+            exibirMensagemFinal
+        );
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao executar análise:",
+            erro
+        );
+
+        limparResultado();
+
+        exibirMensagemErro(
+            "Não foi possível realizar a análise. Tente novamente."
+        );
+    }
+}
+
+
+// ==========================================
+// FORMULÁRIO
+// ==========================================
+
+const formulario =
+    document.querySelector("#form-perfil");
+
+formulario.addEventListener(
+    "submit",
+    async function (evento) {
+
+        evento.preventDefault();
+
+        limparMensagemErro();
+
+        limparResultado();
+
+        const candidato =
+            obterDadosDoFormulario();
+
+
+        const erros =
+            validarCandidato(candidato);
+
+
+        if (erros.length > 0) {
+
+            exibirMensagemErro(
+                erros.join(" ")
+            );
+
+            return;
+        }
+
+
+        await iniciarSistema(candidato);
+    }
+);

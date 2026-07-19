@@ -1,48 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/styles/index.style.css">
-    <title>SkillMatch - Projeto Avaliativo</title>  
+    <title>SkillMatch | Encontre vagas</title>
     <meta name="description" content="Sistema que compara o perfil do candidato com vagas de front-end e calcula o percentual de compatibilidade.">
 </head>
+
 <body>
 
     <header>
-        <img src="./assets/img/Copilot_20260712_162428.png" alt="Logo da SkillMatch">
+        <img class="logo" src="./assets/img/Copilot_20260712_162428.png" alt="Logo da SkillMatch">
     </header>
 
     <main>
         <section aria-label="Formulário de perfil">
             <h1>Encontre sua vaga ideal aqui</h1>
+            <p>Descubra oportunidades compatíveis com seu perfil.</p>
 
             <form id="form-perfil">
                 <label for="nome">Nome:</label>
-                <input type="text" name="nome" id="nome">
+                <input type="text" name="nome" id="nome" required>
 
                 <label for="area">Área:</label>
-                <input type="text" name="area" id="area">
+                <input type="text" name="area" id="area" required>
 
                 <label for="habilidades">Habilidade:</label>
-                <input type="text" name="habilidades" id="habilidades" placeholder="EX: HTML, CSS, JavaScript">
+                <input type="text" name="habilidades" 
+                    id="habilidades" placeholder="EX: HTML, CSS, JavaScript"
+                    required>
 
                 <label for="experiencia">Experiência:</label>
-                <input type="number" name="experiencia" id="experiencia">    
-                
-                <button type="submit">Enviar</button>
+                <input type="number" name="experiencia" 
+                    id="experiencia" min="0" required>
+
+                <button type="submit">Encontrar vagas</button>
             </form>
         </section>
 
-        <section aria-label="Resultados da análise">
+        <section
+            aria-label="Resultados da análise">
+
+            <div
+                id="mensagem-erro" 
+                role="alert" aria-live="assertive">
+            </div>
+
             <div id="area-resultados"></div>
+
         </section>
+        
     </main>
 
-    <footer>
+    <footer class="footer">
+        <div class="footer-container">
 
+            <p>
+                Desenvolvido por <strong>Francisco Otacílio Machado</strong>
+            </p>
+
+            <p>
+                Projeto acadêmico desenvolvido com
+                HTML, CSS e JavaScript.
+            </p>
+
+            <p>
+                Este sistema foi desenvolvido para fins educacionais e demonstração
+                de habilidades em desenvolvimento Front-End.
+            </p>
+
+            <div class="footer-links">
+                <a href="https://github.com/fransciscootacilio" target="_blank" rel="noopener noreferrer">
+                    GitHub
+                </a>
+
+                <a href="https://www.linkedin.com/in/francisco-o-machado/" target="_blank" rel="noopener noreferrer">
+                    LinkedIn
+                </a>
+            </div>
+
+            <small>Versão 1.0.0</small>
+
+        </div>
     </footer>
-    
+
     <script type="module" src="./assets/scripts/main.js"></script>
 </body>
+
 </html>

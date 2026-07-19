@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "empresa": "TechStart",
+    "cargo": "Desenvolvedor Front-End Júnior",
+    "requisitos": [
+      "JavaScript",
+      "CSS",
+      "GitHub",
+      "Lógica de Programação",
+      "Kanban"
+    ],
+    "salario": 2800,
+    "modalidade": "Remoto",
+    "nivel": "Júnior"
+  },
+  {
+    "id": 2,
+    "empresa": "CodeLab",
+    "cargo": "Estágio Front-End",
+    "requisitos": [
+      "JavaScript",
+      "Kanban",
+      "GitHub"
+    ],
+    "salario": 1800,
+    "modalidade": "Híbrido",
+    "nivel": "Estagiário"
+  },
+  {
+    "id": 3,
+    "empresa": "WebSolutions",
+    "cargo": "Programador JavaScript Júnior",
+    "requisitos": [
+      "JavaScript",
+      "Arrays",
+      "Objetos",
+      "Funções"
+    ],
+    "salario": 3000,
+    "modalidade": "Presencial",
+    "nivel": "Júnior"
+  },
+  {
+    "id": 4,
+    "empresa": "SolutionsMund",
+    "cargo": "Desenvolvedor Front-End",
+    "requisitos": [
+      "JavaScript",
+      "React",
+      "GitHub"
+    ],
+    "salario": 2800,
+    "modalidade": "Híbrido",
+    "nivel": "Sênior"
+  }
+]
