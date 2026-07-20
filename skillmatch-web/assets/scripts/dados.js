@@ -7,3 +7,19 @@ export async function buscarVagas() {
 
     return await resposta.json();
 }
+
+const CHAVE_PERFIL = "skillmatch:perfil";
+
+export function salvarPerfil(perfil) {
+    localStorage.setItem(CHAVE_PERFIL, JSON.stringify(perfil));
+}
+
+export function carregarPerfil() {
+    const dados = localStorage.getItem(CHAVE_PERFIL);
+
+    if (!dados) {
+        return null;
+    }
+
+    return JSON.parse(dados);
+}

@@ -3,7 +3,10 @@ import {
     criarContadorDeAnalise
 } from "./motor.js";
 
-import { buscarVagas } from "./dados.js";
+import { buscarVagas,
+        salvarPerfil,
+        carregarPerfil
+ } from "./dados.js";
 
 import {
     exibirResultados,
@@ -104,6 +107,18 @@ function obterDadosDoFormulario() {
     };
 }
 
+function preencherFormulario(perfil) {
+    document.querySelector("#nome").value = perfil.nome;
+    document.querySelector("#area").value = perfil.area;
+    document.querySelector("#habilidades").value = perfil.habilidades.join(", ");
+    document.querySelector("#experiencia").value = perfil.experiencia;
+}
+
+const perfilSalvo = carregarPerfil();
+
+if (perfilSalvo) {
+    preencherFormulario(perfilSalvo);
+}
 
 // ==========================================
 // SISTEMA PRINCIPAL
@@ -112,6 +127,8 @@ function obterDadosDoFormulario() {
 async function iniciarSistema(candidato) {
 
     try {
+
+        exibirCarregamento();
 
         console.log("SKILLMATCH JS");
 
@@ -136,6 +153,11 @@ async function iniciarSistema(candidato) {
 
         const vagasCarregadas =
             await buscarVagas();
+
+        if (vagasCarregadas.length === 0) {
+            exibirMensagemVazia();
+            return;
+        }
 
 
         const vagas =
@@ -338,6 +360,7 @@ formulario.addEventListener(
             return;
         }
 
+        salvarPerfil(candidato);
 
         await iniciarSistema(candidato);
     }
