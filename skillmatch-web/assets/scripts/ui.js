@@ -210,8 +210,7 @@ export function exibirDestaque(melhorVaga, habilidadesParaEstudar) {
     destaque.innerHTML = `
         <h2> Vaga mais compatível</h2>
         <p><strong>${melhorVaga.cargo}</strong> - ${melhorVaga.empresa}</p>
-        <p>${melhorVaga.percentual}% de coompatibilidade (${melhorVaga.classificacao})</p>;
-
+        <p>${melhorVaga.percentual}% de coompatibilidade (${melhorVaga.classificacao})</p>
 
         <h3> Recomendação de estudo</h3>
         <p> 
@@ -223,5 +222,5 @@ export function exibirDestaque(melhorVaga, habilidadesParaEstudar) {
         </p>
     `;
 
-    areaResultados.appendChild(destaque);
+    areaResultados.insertBefore(destaque, areaResultados.firstChild);
 }

@@ -214,8 +214,9 @@ async function iniciarSistema(candidato) {
         // ⚠️ só chama depois que TUDO acima já foi calculado
         // ==================================
 
-        exibirDestaque(melhorVaga, habilidadesParaEstudar);
         exibirResultados(resultados);
+        exibirDestaque(melhorVaga, habilidadesParaEstudar);
+    
 
 
         // ==================================
