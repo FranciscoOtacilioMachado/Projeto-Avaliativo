@@ -291,6 +291,24 @@ header img {
     margin-bottom: 0.5rem;
 }
 
+.destaque-melhor-vaga {
+    background-color: var(--cor-primaria);
+    color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.destaque-melhor-vaga h2,
+.destaque-melhor-vaga h3 {
+    margin-bottom: 0.5rem;
+}
+
+.destaque-melhor-vaga p {
+    margin-bottom: 0.75rem;
+}
+
 
 /*resposividade para telas com no máximo até 768px*/
 
