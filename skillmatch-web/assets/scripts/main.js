@@ -3,10 +3,11 @@ import {
     criarContadorDeAnalise
 } from "./motor.js";
 
-import { buscarVagas,
-        salvarPerfil,
-        carregarPerfil
- } from "./dados.js";
+import {
+    buscarVagas,
+    salvarPerfil,
+    carregarPerfil
+} from "./dados.js";
 
 import {
     exibirResultados,
@@ -14,7 +15,8 @@ import {
     limparMensagemErro,
     exibirCarregamento,
     limparResultado,
-    exibirMensagemVazia
+    exibirMensagemVazia,
+    exibirDestaque
 } from "./ui.js";
 
 
@@ -23,15 +25,11 @@ const contadorAnalises =
 
 
 // ==========================================
-// FUNÇÃO PARA FINALIZAR ANÁLISE
+// FUNÇÃO PARA FINALIZAR ANÁLISE (callback)
 // ==========================================
 
-function finalizarAnalise(
-    nomeCandidato,
-    callback
-) {
+function finalizarAnalise(nomeCandidato, callback) {
     console.log("\nAnálise finalizada");
-
     callback(nomeCandidato);
 }
 
@@ -43,67 +41,49 @@ function exibirMensagemFinal(nome) {
 }
 
 
+// ==========================================
+// VALIDAÇÃO DO FORMULÁRIO
+// ==========================================
+
 function validarCandidato(candidato) {
     const erros = [];
 
     if (!candidato.nome) {
-        erros.push(
-            "Informe seu nome."
-        );
+        erros.push("Informe seu nome.");
     }
 
     if (!candidato.area) {
-        erros.push(
-            "Informe sua área de interesse."
-        );
+        erros.push("Informe sua área de interesse.");
     }
 
     if (
         candidato.habilidades.length === 0 ||
         candidato.habilidades[0] === ""
     ) {
-        erros.push(
-            "Informe pelo menos uma habilidade."
-        );
+        erros.push("Informe pelo menos uma habilidade.");
     }
 
     return erros;
 }
 
+
 // ==========================================
-// LER FORMULÁRIO
+// LER / PREENCHER FORMULÁRIO
 // ==========================================
 
 function obterDadosDoFormulario() {
-
-    const nome =
-        document.querySelector("#nome").value;
-
-    const area =
-        document.querySelector("#area").value;
-
-    const habilidades =
-        document.querySelector("#habilidades").value;
-
-    const experiencia =
-        document.querySelector("#experiencia").value;
-
+    const nome = document.querySelector("#nome").value;
+    const area = document.querySelector("#area").value;
+    const habilidades = document.querySelector("#habilidades").value;
+    const experiencia = document.querySelector("#experiencia").value;
 
     return {
-
         nome,
-
         area,
-
-        habilidades:
-            habilidades
-                .split(",")
-                .map(habilidade =>
-                    habilidade.trim()
-                ),
-
-        experiencia:
-            Number(experiencia)
+        habilidades: habilidades
+            .split(",")
+            .map(habilidade => habilidade.trim()),
+        experiencia: Number(experiencia)
     };
 }
 
@@ -114,14 +94,20 @@ function preencherFormulario(perfil) {
     document.querySelector("#experiencia").value = perfil.experiencia;
 }
 
+// RF14 — se já existe perfil salvo (localStorage), preenche o formulário
+// assim que a página carrega (fora de qualquer função, roda uma vez só)
 const perfilSalvo = carregarPerfil();
 
 if (perfilSalvo) {
     preencherFormulario(perfilSalvo);
 }
 
+
 // ==========================================
 // SISTEMA PRINCIPAL
+// ⚠️ Tudo que usa "resultados", "vagas" ou "candidato" precisa
+//    estar DENTRO desta função — são parâmetros/variáveis locais
+//    dela, não existem fora.
 // ==========================================
 
 async function iniciarSistema(candidato) {
@@ -131,110 +117,67 @@ async function iniciarSistema(candidato) {
         exibirCarregamento();
 
         console.log("SKILLMATCH JS");
+        console.log(`Candidato: ${candidato.nome}`);
+        console.log(`Área: ${candidato.area}`);
+        console.log(`Habilidades: ${candidato.habilidades.join(", ")}`);
+        console.log("\nAnalisando vagas...\n");
 
-        console.log(
-            `Candidato: ${candidato.nome}`
-        );
+        const vagasCarregadas = await buscarVagas();
 
-        console.log(
-            `Área: ${candidato.area}`
-        );
-
-
-        console.log(
-            `Habilidades: ${candidato.habilidades.join(", ")}`
-        );
-
-
-        console.log(
-            "\nAnalisando vagas...\n"
-        );
-
-
-        const vagasCarregadas =
-            await buscarVagas();
-
+        // RF13 — estado "vazio"
         if (vagasCarregadas.length === 0) {
             exibirMensagemVazia();
             return;
         }
 
-
-        const vagas =
-            vagasCarregadas.map(dado =>
-                new VagasFrontEnd(
-                    dado.id,
-                    dado.empresa,
-                    dado.cargo,
-                    dado.requisitos,
-                    dado.salario,
-                    dado.modalidade,
-                    dado.nivel
-                )
-            );
-
-
-        const resultados =
-            vagas.map(vaga =>
-                vaga.calcularCompatibilidade(
-                    candidato
-                )
-            );
-
-
-        exibirResultados(resultados);
-
-
-        // ==================================
-        // REDUCE
-        // ==================================
-
-        const melhorVaga =
-            resultados.reduce(
-                (melhor, atual) => {
-
-                    if (
-                        atual.percentual >
-                        melhor.percentual
-                    ) {
-                        return atual;
-                    }
-
-                    return melhor;
-                }
-            );
-
-
-        console.log(
-            "\nVAGA MAIS COMPATÍVEL"
+        // RF08 — callback: transforma cada objeto do JSON numa instância de Vaga
+        const vagas = vagasCarregadas.map(dado =>
+            new VagasFrontEnd(
+                dado.id,
+                dado.empresa,
+                dado.cargo,
+                dado.requisitos,
+                dado.salario,
+                dado.modalidade,
+                dado.nivel
+            )
         );
 
+        // RF08 — closure: contadorAnalises() lembra quantas vagas já
+        // foram analisadas nesta sessão, mesmo sendo chamada várias vezes
+        const resultados = vagas.map(vaga => {
+            const resultado = vaga.calcularCompatibilidade(candidato);
+            console.log(`Análises realizadas nesta sessão: ${contadorAnalises()}`);
+            return resultado;
+        });
 
-        console.log(
-            `${melhorVaga.cargo} - ${melhorVaga.percentual}%`
+
+        // ==================================
+        // REDUCE — melhor vaga
+        // ==================================
+
+        const melhorVaga = resultados.reduce((melhor, atual) => {
+            if (atual.percentual > melhor.percentual) {
+                return atual;
+            }
+            return melhor;
+        });
+
+        console.log("\nVAGA MAIS COMPATÍVEL");
+        console.log(`${melhorVaga.cargo} - ${melhorVaga.percentual}%`);
+
+
+        // ==================================
+        // FIND — primeira vaga de alta compatibilidade
+        // ==================================
+
+        const vagaAltaCompatibilidade = resultados.find(
+            resultado => resultado.percentual >= 80
         );
-
-
-        // ==================================
-        // FIND
-        // ==================================
-
-        const vagaAltaCompatibilidade =
-            resultados.find(
-                resultado =>
-                    resultado.percentual >= 80
-            );
-
 
         if (vagaAltaCompatibilidade) {
-
-            console.log(
-                "\nPrimeira vaga com alta compatibilidade:"
-            );
-
-            console.log(
-                vagaAltaCompatibilidade.cargo
-            );
+            console.log("\nPrimeira vaga com alta compatibilidade:");
+            console.log(vagaAltaCompatibilidade.cargo);
         }
 
 
@@ -242,126 +185,75 @@ async function iniciarSistema(candidato) {
         // EVERY
         // ==================================
 
-        const todasExigemJavaScript =
-            vagas.every(
-                vaga =>
-                    vaga.requisitos.includes(
-                        "JavaScript"
-                    )
-            );
-
-
-        console.log(
-            "\nTodas as vagas exigem JavaScript?"
+        const todasExigemJavaScript = vagas.every(vaga =>
+            vaga.requisitos.includes("JavaScript")
         );
 
-
-        console.log(
-            todasExigemJavaScript
-                ? "Sim"
-                : "Não"
-        );
+        console.log("\nTodas as vagas exigem JavaScript?");
+        console.log(todasExigemJavaScript ? "Sim" : "Não");
 
 
         // ==================================
         // RECOMENDAÇÃO DE ESTUDOS
         // ==================================
 
-        const habilidadesParaEstudar =
-            resultados.reduce(
-                (lista, resultado) => {
+        const habilidadesParaEstudar = resultados.reduce((lista, resultado) => {
+            resultado.habilidadesFaltantes.forEach(habilidade => {
+                if (!lista.includes(habilidade)) {
+                    lista.push(habilidade);
+                }
+            });
+            return lista;
+        }, []);
 
-                    resultado.habilidadesFaltantes
-                        .forEach(habilidade => {
-
-                            if (
-                                !lista.includes(
-                                    habilidade
-                                )
-                            ) {
-
-                                lista.push(
-                                    habilidade
-                                );
-                            }
-                        });
-
-                    return lista;
-
-                },
-                []
-            );
+        console.log(`Priorize estudar: ${habilidadesParaEstudar.join(", ")}`);
 
 
-        console.log(
-            `Priorize estudar: ${
-                habilidadesParaEstudar.join(", ")
-            }`
-        );
+        // ==================================
+        // EXIBIÇÃO NA TELA
+        // ⚠️ só chama depois que TUDO acima já foi calculado
+        // ==================================
+
+        exibirDestaque(melhorVaga, habilidadesParaEstudar);
+        exibirResultados(resultados);
 
 
         // ==================================
         // CALLBACK
         // ==================================
 
-        finalizarAnalise(
-            candidato.nome,
-            exibirMensagemFinal
-        );
+        finalizarAnalise(candidato.nome, exibirMensagemFinal);
 
 
     } catch (erro) {
 
-        console.error(
-            "Erro ao executar análise:",
-            erro
-        );
-
+        console.error("Erro ao executar análise:", erro);
         limparResultado();
-
-        exibirMensagemErro(
-            "Não foi possível realizar a análise. Tente novamente."
-        );
+        exibirMensagemErro("Não foi possível realizar a análise. Tente novamente.");
     }
 }
 
 
 // ==========================================
-// FORMULÁRIO
+// FORMULÁRIO — captura do evento de envio
 // ==========================================
 
-const formulario =
-    document.querySelector("#form-perfil");
+const formulario = document.querySelector("#form-perfil");
 
-formulario.addEventListener(
-    "submit",
-    async function (evento) {
+formulario.addEventListener("submit", async function (evento) {
 
-        evento.preventDefault();
+    evento.preventDefault();
+    limparMensagemErro();
+    limparResultado();
 
-        limparMensagemErro();
+    const candidato = obterDadosDoFormulario();
+    const erros = validarCandidato(candidato);
 
-        limparResultado();
-
-        const candidato =
-            obterDadosDoFormulario();
-
-
-        const erros =
-            validarCandidato(candidato);
-
-
-        if (erros.length > 0) {
-
-            exibirMensagemErro(
-                erros.join(" ")
-            );
-
-            return;
-        }
-
-        salvarPerfil(candidato);
-
-        await iniciarSistema(candidato);
+    if (erros.length > 0) {
+        exibirMensagemErro(erros.join(" "));
+        return;
     }
-);
+
+    salvarPerfil(candidato);
+    await iniciarSistema(candidato);
+});

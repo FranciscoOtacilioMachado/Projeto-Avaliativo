@@ -200,3 +200,28 @@ export function exibirMensagemVazia() {
         </div>
     `;
 }
+
+export function exibirDestaque(melhorVaga, habilidadesParaEstudar) {
+    const areaResultados = document.querySelector("#area-resultados");
+
+    const destaque = document.createElement("div");
+    destaque.classList.add("destaque-melhor-vaga");
+
+    destaque.innerHTML = `
+        <h2> Vaga mais compatível</h2>
+        <p><strong>${melhorVaga.cargo}</strong> - ${melhorVaga.empresa}</p>
+        <p>${melhorVaga.percentual}% de coompatibilidade (${melhorVaga.classificacao})</p>;
+
+
+        <h3> Recomendação de estudo</h3>
+        <p> 
+            ${
+                habilidadesParaEstudar.length > 0
+                        ? `Priorize estudar: ${habilidadesParaEstudar.join(", ")}`
+                        : "Parabéns! Suas habilidades cobrem todos os requisitos encontrados."
+            }
+        </p>
+    `;
+
+    areaResultados.appendChild(destaque);
+}
