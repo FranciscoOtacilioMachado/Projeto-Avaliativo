@@ -66,18 +66,20 @@ skillmatch-web/
 - Persistência do perfil entre visitas (localStorage)
 - Estados de carregamento, vazio e erro no carregamento das vagas
 
-## Decisões técnicas
-
-[Espaço pra você explicar 2-3 escolhas que fez — ex: por que usou
-`toLowerCase()` na comparação de habilidades, por que a subclasse
-VagasFrontEnd existe, por que escolheu essa regra de desempate no
-melhor vaga]
-
 ## Melhorias futuras
 
 - [ ] Filtro/ordenação de vagas
-- [ ] Tema claro/escuro
-- [ ] Integração com API pública de vagas reais
+- [ ] Integração com API pública de vagas reais ou Banco de dados.
+
+## Vídeo de apresentação
+
+[![Assista à demonstração](https://drive.google.com/file/d/17YuM8BjUYVsn31KSmV-RfdxbwrSFeedw/view?usp=drive_link)](COLOQUE_SEU_LINK_AQUI)
+
+[![Assista à demonstração](https://www.youtube.com/watch?v=owJUTpWJPww)](COLOQUE_SEU_LINK_AQUI)
+
+
+
+
 
 ## Autor
 
