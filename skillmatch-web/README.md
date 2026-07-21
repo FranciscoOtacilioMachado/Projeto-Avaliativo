@@ -73,13 +73,9 @@ skillmatch-web/
 
 ## Vídeo de apresentação
 
-[![Assista à demonstração](https://drive.google.com/file/d/17YuM8BjUYVsn31KSmV-RfdxbwrSFeedw/view?usp=drive_link)](COLOQUE_SEU_LINK_AQUI)
+[![Assista à demonstração](https://drive.google.com/file/d/1sMPotzugbVKCZYPW7O81tcwudhXzKD95/view?usp=drive_link)](COLOQUE_SEU_LINK_AQUI)
 
-[![Assista à demonstração](https://www.youtube.com/watch?v=owJUTpWJPww)](COLOQUE_SEU_LINK_AQUI)
-
-
-
-
+[![Assista à demonstração](https://youtu.be/_dvCSQuaTmQ)](COLOQUE_SEU_LINK_AQUI)
 
 ## Autor
 
